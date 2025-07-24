@@ -48,8 +48,8 @@ def create_app():
     celery_app.register_task(run_task)
 
     celery_args = ["worker", "-l", "info", "--max-memory-per-child", "100"]
-    if platform.system() == "Windows":
-        celery_args.append("--pool=solo")
+    # if platform.system() == "Windows":
+    #     celery_args.append("--pool=solo")
 
     # Start Celery worker in a background thread (if running as a single process)
     import threading
