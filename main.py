@@ -8,6 +8,7 @@ import platform
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from celery import Celery
+from app.utils import celery_utils
 from app.utils.logger import get_logger
 from app.utils.celery_utils import create_task
 from app.gateways.github_pr import GithubPRGateway
@@ -40,12 +41,14 @@ def create_app():
     reviewer = ReviewerAgent(llm)
     task_manager = TaskManager(logger, pr_repo, task_repo, reviewer)
 
-    redis_conn_string = os.getenv("REDIS_CONN_STRING", "redis://localhost:6379")
-    celery_app = Celery(
-        "tasks", broker=redis_conn_string + "/0", backend=redis_conn_string + "/1"
-    )
+    # Inject task_manager into celery_utils
+    celery_utils.task_manager = task_manager
+
     run_task = create_task(celery_app, task_manager)
     celery_app.register_task(run_task)
+
+    celery_app = celery_utils.celery_app
+    run_task = celery_utils.run_review_task
 
     celery_args = ["worker", "-l", "info", "--max-memory-per-child", "100"]
     # if platform.system() == "Windows":
