@@ -10,7 +10,6 @@ from fastapi import FastAPI
 from celery import Celery
 from app.utils import celery_utils
 from app.utils.logger import get_logger
-from app.utils.celery_utils import create_task
 from app.gateways.github_pr import GithubPRGateway
 from app.gateways.task_repo_pg import PostgresTaskRepo
 from app.gateways.openrouter import OpenRouterLanguageModel
