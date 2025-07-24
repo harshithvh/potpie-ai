@@ -3,5 +3,5 @@ WORKDIR /app
 ADD requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-CMD ["python", "app/main.py"]
+CMD ["python", "main.py"]
 EXPOSE 8080
