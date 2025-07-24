@@ -43,9 +43,6 @@ def create_app():
     # Inject task_manager into celery_utils
     celery_utils.task_manager = task_manager
 
-    run_task = create_task(celery_app, task_manager)
-    celery_app.register_task(run_task)
-
     celery_app = celery_utils.celery_app
     run_task = celery_utils.run_review_task
 
